@@ -32,6 +32,9 @@ class Preferences {
         load();
         __save.bind('preferences' ,'com.ghostglowdev.utbengine');
         __save.flush();
+
+        // in case
+        FlxG.stage.window.onClose.add(save);
     }
 
     public static function load() {
@@ -42,5 +45,9 @@ class Preferences {
             } else 
                 Reflect.setProperty(__fields, field, Reflect.field(__default, field));
         }
+    }
+
+    public static function save() {
+        __save.flush();
     }
 }
