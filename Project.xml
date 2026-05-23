@@ -24,13 +24,14 @@
 	<!-- _____________________________ Path Settings ____________________________ -->
 
 	<set name="BUILD_DIR" value="export" />
-	<source path="source" />
+	<source path="src" />
 	<assets path="assets" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
+	<haxelib name="tjson" />
 
 	<!--In case you want to use the ui package-->
 	<!--<haxelib name="flixel-ui" />-->

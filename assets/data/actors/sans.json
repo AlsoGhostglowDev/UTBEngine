@@ -1,0 +1,57 @@
+{
+    "name": "sans",
+    "directory": "sans",
+    "parts": [
+        {
+            "name": "legs",
+            "imageFile": "legs",
+            "offsetX": 8,
+            "offsetY": 23,
+            "frameWidth": 42,
+            "frameHeight": 41,
+            "animations": [
+                {
+                    "name": "idle",
+                    "frames": [0],
+                    "framerate": 0,
+                    "loop": false
+                }
+            ],
+            "layer": 0
+        },
+        {
+            "name": "torso",
+            "imageFile": "torso",
+            "offsetX": 0,
+            "offsetY": 0,
+            "frameWidth": 63,
+            "frameHeight": 30,
+            "animations": [
+                {
+                    "name": "idle",
+                    "frames": [1],
+                    "framerate": 0,
+                    "loop": false
+                }
+            ],
+            "layer": 1
+        },
+        {
+            "name": "head",
+            "imageFile": "head",
+            "offsetX": 17,
+            "offsetY": -23,
+            "frameWidth": 29,
+            "frameHeight": 30,
+            "animations": [
+                {
+                    "name": "idle",
+                    "frames": [0],
+                    "framerate": 0,
+                    "loop": false
+                }
+            ],
+            "layer": 2
+        }
+    ]
+}
