@@ -1,3 +1,4 @@
+#if !macro
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -12,3 +13,4 @@ import flixel.util.FlxColor;
 
 import undertale.objects.*;
 import undertale.backend.*;
+#end
