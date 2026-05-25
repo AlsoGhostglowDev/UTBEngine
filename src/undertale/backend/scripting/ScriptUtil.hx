@@ -6,6 +6,8 @@ import haxe.macro.Context;
 
 #if HSCRIPT_ALLOWED
 import hscript.HEnum;
+import hscript.utils.UnsafeReflect;
+import hscript.Expr;
 #end
 
 class ScriptUtil {
@@ -71,5 +73,109 @@ class ScriptUtil {
 		}
 
         return "Unknown";
+	}
+
+	public static function getImportsFromModule(content:String, ?name:String = "hscript"):Map<String, Dynamic> {
+		var retVal:Map<String, Dynamic> = new Map<String, Dynamic>();
+
+		var parser:hscript.Parser = new hscript.Parser();
+		parser.allowJSON = parser.allowMetadata = parser.allowTypes = parser.allowRegex = true;
+		parser.preprocessorValues = ScriptUtil.defines;
+
+		var interp:hscript.Interp = new hscript.Interp();
+		interp.allowStaticVariables = interp.allowPublicVariables = false;
+
+		try {
+			parser.line = 1; // Reset the parser position.
+			var parsedModules:Array<ModuleDecl> = parser.parseModule(content, name);
+
+			for (module in parsedModules) {
+				switch (module) {
+					case DImport(path, isWildcard):
+						var _import = importResolve(path.join('.'));
+						retVal.set(_import.name, _import.value);
+					default:
+						//
+				}
+			}
+		} catch (e) {
+			trace('Error on import.hx: ' + Std.string(e));
+		}
+
+		return retVal;
+	}
+
+	public static function importResolve(clsName:String, ?aliasAs:String):{name:Null<String>, value:Dynamic}
+	{
+		var splitClassName:Array<String> = [for (e in clsName.split(".")) StringTools.trim(e)];
+		var realClassName = splitClassName.join(".");
+		var claVarName = splitClassName[splitClassName.length - 1];
+		var toSetName = aliasAs != null ? aliasAs : claVarName;
+		var oldClassName = realClassName;
+		var oldSplitName = splitClassName.copy();
+
+		function doImportResolve(__clsName:String):Null<Dynamic> {
+			var _cl = Type.resolveClass(__clsName);
+			if (_cl == null) _cl = Type.resolveClass('${__clsName}_HSC');
+			return _cl;
+		}
+
+		var cl = doImportResolve(realClassName);
+		var en = Type.resolveEnum(realClassName);
+		// trace(realClassName, cl, en, splitClassName);
+
+		// Allow for flixel.ui.FlxBar.FlxBarFillDirection;
+		if (cl == null && en == null) {
+			if (splitClassName.length > 1) {
+				splitClassName.splice(-2, 1); // Remove the last last item
+				realClassName = splitClassName.join(".");
+
+				cl = doImportResolve(realClassName);
+				en = Type.resolveEnum(realClassName);
+				// trace(realClassName, cl, en, splitClassName);
+			}
+		}
+
+		if (cl == null && en == null) {
+			// allows for static imports like "haxe.io.Path.normalize"
+			var clPth:Array<String> = oldSplitName.copy();
+			var funcName:String = clPth.pop();
+			var statField:Dynamic = Reflect.getProperty(Type.resolveClass(StringTools.trim(clPth.join("."))), funcName);
+
+			if (statField != null) {
+				return {name: (toSetName != null && toSetName.length > 0 ? toSetName : funcName), value: statField};
+			}
+		} else {
+			/*
+			if(toSetName != claVarName && !Tools.isUppercase(toSetName)) {
+				error(ECustom("Type aliases must start with an uppercase letter"));
+				return null;
+			}
+			*/
+
+			if (en != null) { // ENUM!!!!
+				var enumThingy:HEnum = {};
+				for (c in en.getConstructors()) {
+					try {
+						// UnsafeReflect.setField(enumThingy, c, en.createByName(c));
+						enumThingy.setEnum(c, en.createByName(c));
+					} catch (e) {
+						try {
+							// UnsafeReflect.setField(enumThingy, c, UnsafeReflect.field(en, c));
+							enumThingy.setEnum(c, UnsafeReflect.field(en, c));
+						}
+						catch (ex) {
+							throw e;
+						}
+					}
+				}
+
+				return {name: toSetName, value: enumThingy};
+			} else { // Standard class
+				return {name: toSetName, value: cl};
+			}
+		}
+
+		return {name: null, value: null};
 	}
 }

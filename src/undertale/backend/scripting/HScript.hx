@@ -11,7 +11,6 @@ import hscript.Printer;
 
 typedef HScriptOptions = {
 	var ?parent:Dynamic;
-	@:default(false) var ?isString:Bool;
 	@:default(false) var ?ignoreErrors:Bool;
 }
 
@@ -24,38 +23,8 @@ class HScript extends flixel.FlxBasic {
 	#if HSCRIPT_ALLOWED
 	public static var staticVariables:Map<String, Dynamic> = [];
 
-	public static var defaultClasses:Map<String, Dynamic> = [
-		//Base level haxe classes
-		"Math" => Math, "Std" => Std,
-		"StringTools" => StringTools,
-		"Reflect" => Reflect, 'Type' => Type,
-		'Date' => Date, 'DateTools' => DateTools,
-		#if sys
-		'Sys' => Sys,
-		"File" => sys.io.File,
-		"FileSystem" => sys.FileSystem,
-		#end
-
-		#if flixel
-		//Flixel classes
-		"FlxG" => flixel.FlxG,
-		"FlxSprite" => flixel.FlxSprite,
-		"FlxText" => flixel.text.FlxText,
-		"FlxTween" => flixel.tweens.FlxTween,
-		"FlxEase" => flixel.tweens.FlxEase,
-		"FlxMath" => flixel.math.FlxMath,
-		"FlxSound" => flixel.sound.FlxSound,
-		"FlxGroup" => flixel.group.FlxGroup,
-		"FlxTypedGroup" => flixel.group.FlxGroup.FlxTypedGroup,
-		"FlxSpriteGroup" => flixel.group.FlxSpriteGroup,
-
-		"FlxAxes" => ScriptUtil.resolveAbstract("flixel.util.FlxAxes"),
-		"FlxColor" => ScriptUtil.resolveAbstract("flixel.util.FlxColor"),
-		#end
-
-		"Json" => haxe.Json,
-		"Xml" => Xml
-	];
+	//Default imports, handled by `import.hx`
+	public static var defaultImports:Map<String, Dynamic> = new Map();
 
 	public var parser:Parser;
 	public var interp:Interp;
@@ -92,8 +61,7 @@ class HScript extends flixel.FlxBasic {
 		this.path = path;
 
 		this.options = options;
-		this.options ??= {ignoreErrors: false, isString: false};
-		this.options.isString ??= false; // Just making sure
+		this.options.ignoreErrors ??= false;
 
 		if(parser == null) initParser();
 		if(interp == null) initInterp();
@@ -122,9 +90,10 @@ class HScript extends flixel.FlxBasic {
 
 			this.active = true;
 		} catch(e) {
-			if ((this.options.ignoreErrors ?? false) == true) {
+			if (this.options.ignoreErrors == null || !this.options.ignoreErrors) {
 				trace('Error on haxe script "' + this.path + '": ' + Std.string(e));
 			}
+			this.active = false;
 		}
 
 		return null;
@@ -151,7 +120,49 @@ class HScript extends flixel.FlxBasic {
 		if(this.interp == null) return;
 
 		interp.variables.set("__script__", this);
-		for (tag => value in defaultClasses) interp.variables.set(tag, value);
+		for (tag => value in defaultImports) interp.variables.set(tag, value);
+
+		// Default classes //
+
+		interp.variables.set("Math", Math);
+		interp.variables.set("Std", Std);
+		interp.variables.set("StringTools", StringTools);
+		interp.variables.set("Reflect", Reflect);
+		interp.variables.set("Type", Type);
+		interp.variables.set("Reflect", Reflect);
+		interp.variables.set("Date", Date);
+		interp.variables.set("DateTools", DateTools);
+		#if sys
+		interp.variables.set("Sys", Sys);
+		interp.variables.set("File", sys.io.File);
+		interp.variables.set("FileSystem", sys.FileSystem);
+		#end
+
+		//Battle Engine stuff
+		interp.variables.set("Paths", undertale.backend.Paths);
+		interp.variables.set("Preferences", undertale.backend.Preferences);
+		interp.variables.set("BaseState", undertale.backend.BaseState);
+		interp.variables.set("PlayState", undertale.game.PlayState);
+
+		#if flixel
+		interp.variables.set("FlxG", flixel.FlxG);
+		interp.variables.set("FlxSprite", flixel.FlxSprite);
+		interp.variables.set("FlxText", flixel.text.FlxText);
+		interp.variables.set("FlxTween", flixel.tweens.FlxTween);
+		interp.variables.set("FlxEase", flixel.tweens.FlxEase);
+
+		interp.variables.set("FlxMath", flixel.math.FlxMath);
+		interp.variables.set("FlxSound", flixel.sound.FlxSound);
+
+		interp.variables.set("FlxGroup", flixel.group.FlxGroup);
+		interp.variables.set("FlxTypedGroup", flixel.group.FlxGroup.FlxTypedGroup);
+		interp.variables.set("FlxSpriteGroup", flixel.group.FlxSpriteGroup);
+
+		interp.variables.set("FlxAxes", ScriptUtil.resolveAbstract("flixel.util.FlxAxes"));
+		interp.variables.set("FlxColor", ScriptUtil.resolveAbstract("flixel.util.FlxColor"));
+		#end
+
+		// End of default imports //
 
 		interp.variables.set("__type__", ScriptUtil.hTypeof);
 		interp.variables.set("__close__", function(?destroy:Bool = true) {
