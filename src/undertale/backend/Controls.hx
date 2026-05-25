@@ -8,18 +8,21 @@ class Controls
 	public var GAME_UP(get, never):Bool;
 	public var GAME_RIGHT(get, never):Bool;
 	public var GAME_SLOW(get, never):Bool;
+	public var GAME_SHOOT(get, never):Bool;
 
 	public var GAME_LEFT_P(get, never):Bool;
 	public var GAME_DOWN_P(get, never):Bool;
 	public var GAME_UP_P(get, never):Bool;
 	public var GAME_RIGHT_P(get, never):Bool;
 	public var GAME_SLOW_P(get, never):Bool;
+	public var GAME_SHOOT_P(get, never):Bool;
 
 	public var GAME_LEFT_R(get, never):Bool;
 	public var GAME_DOWN_R(get, never):Bool;
 	public var GAME_UP_R(get, never):Bool;
 	public var GAME_RIGHT_R(get, never):Bool;
 	public var GAME_SLOW_R(get, never):Bool;
+	public var GAME_SHOOT_R(get, never):Bool;
 
 	public var UI_LEFT(get, never):Bool;
 	public var UI_DOWN(get, never):Bool;
@@ -51,6 +54,9 @@ class Controls
 	function get_GAME_SLOW()
 		return FlxG.keys.anyPressed(Preferences.__fields.GAME_SLOW);
 
+	function get_GAME_SHOOT()
+		return FlxG.keys.anyPressed(Preferences.__fields.GAME_SHOOT);
+
 	function get_GAME_LEFT_P()
 		return FlxG.keys.anyJustPressed(Preferences.__fields.GAME_LEFT);
 
@@ -66,6 +72,9 @@ class Controls
 	function get_GAME_SLOW_P()
 		return FlxG.keys.anyJustPressed(Preferences.__fields.GAME_SLOW);
 
+	function get_GAME_SHOOT_P()
+		return FlxG.keys.anyJustPressed(Preferences.__fields.GAME_SHOOT);
+
 	function get_GAME_LEFT_R()
 		return FlxG.keys.anyJustReleased(Preferences.__fields.GAME_LEFT);
 
@@ -80,6 +89,9 @@ class Controls
 
 	function get_GAME_SLOW_R()
 		return FlxG.keys.anyJustReleased(Preferences.__fields.GAME_SLOW);
+
+	function get_GAME_SHOOT_R()
+		return FlxG.keys.anyJustReleased(Preferences.__fields.GAME_SHOOT);
 
 	function get_UI_LEFT()
 		return FlxG.keys.anyPressed(Preferences.__fields.UI_LEFT);

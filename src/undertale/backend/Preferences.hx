@@ -11,6 +11,7 @@ import flixel.util.FlxSave;
 	public var GAME_UP:Array<FlxKey> = [W, UP];
 	public var GAME_RIGHT:Array<FlxKey> = [D, RIGHT];
 	public var GAME_SLOW:Array<FlxKey> = [X, SHIFT];
+	public var GAME_SHOOT:Array<FlxKey> = [Z, ENTER];
 
 	// ui controls
 	public var UI_LEFT:Array<FlxKey> = [A, LEFT];

@@ -7,6 +7,11 @@ package undertale.backend;
 		return 'assets/images/$key.png';
 	}
 
+	static inline function font(key:String)
+	{
+		return 'assets/fonts/$key';
+	}
+
 	static inline function sound(key:String)
 	{
 		return 'assets/sounds/$key.ogg';
