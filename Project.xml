@@ -16,6 +16,12 @@
 
 	<!-- ________________________________ Defines _______________________________ -->
 
+	<!-- Debug mode -->
+	<define name="DEBUG_MODE" />
+
+	<!-- Shows debug information and traces, including the FPS text -->
+	<define name="DEBUG_INFORMATION" if="DEBUG_MODE" />
+
 	<!-- Handles hscript compatibility -->
 	<define name="HSCRIPT_ALLOWED" />
 
@@ -45,6 +51,9 @@
 		<haxedef name="hscriptPos" />
 		<define name="CUSTOM_CLASSES" />
 	</section>
+
+	<!-- This gives access to the sys api when on html or javascript -->
+	<haxelib name="hxnodejs" if="js"/>
 
 	<!--In case you want to use the ui package-->
 	<!--<haxelib name="flixel-ui" />-->

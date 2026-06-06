@@ -1,4 +1,4 @@
-package undertale.backend;
+package undertale.backend.utils;
 
 import openfl.media.Sound;
 

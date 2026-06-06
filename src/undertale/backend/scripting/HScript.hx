@@ -50,8 +50,6 @@ class HScript extends flixel.FlxBasic {
 		if(interp == null) return null;
 
 		interp.scriptObject = val;
-		if(val.variables != null) interp.publicVariables = val.variables;
-
 		return interp.scriptObject;
 	}
 
@@ -73,11 +71,7 @@ class HScript extends flixel.FlxBasic {
 	}
 
 	public inline function runFile(path:String):Dynamic {
-		#if sys
-		return this.run(sys.io.File.getContent(path));
-		#else
-		return null;
-		#end
+		return this.run(FileUtil.getText(path));
 	}
 
 	public function run(code:String):Dynamic {

@@ -5,6 +5,7 @@ import flixel.math.FlxMath;
 import undertale.objects.*;
 import undertale.objects.Heart.HeartType;
 import undertale.game.ui.*;
+import undertale.backend.scripting.Scripts;
 
 class PlayState extends BaseState
 {

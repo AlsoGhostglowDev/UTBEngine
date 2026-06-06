@@ -13,4 +13,5 @@ import flixel.util.FlxColor;
 
 import undertale.objects.*;
 import undertale.backend.*;
+import undertale.backend.utils.*;
 #end
