@@ -23,14 +23,14 @@ class HUD extends FlxSpriteGroup {
         level.setFormat(Paths.font('mars.ttf'), 25, 0xFFFFFFFF);
         add(level);
 
-        healthBar = new HealthBar(275, 400, Player.maxHealth);
+        healthBar = new HealthBar(245, 400, Player.maxHealth);
         add(healthBar);
 
-		hp = new FlxText(244, 402, 0, 'HP');
+		hp = new FlxText(214, 402, 0, 'HP');
 		hp.setFormat(Paths.font('wonder.ttf'), 10, 0xFFFFFFFF);
 		add(hp);
 
-		kr = new FlxText(healthBar.x + (Player.health * 2) + 10, 402, 0, 'KR');
+		kr = new FlxText(healthBar.x + (Player.health * 1.2) + 10, 402, 0, 'KR');
 		kr.setFormat(Paths.font('wonder.ttf'), 10, 0xFFFFFFFF);
 		add(kr);
 

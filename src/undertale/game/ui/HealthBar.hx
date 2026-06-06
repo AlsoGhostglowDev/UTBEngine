@@ -16,11 +16,13 @@ class HealthBar extends Bar {
 
     public function new(x:Float, y:Float, maxHealth:Float) {
         super(x, y, null, null, this, '__health', {min: 0, max: maxHealth});
-		empty.makeGraphic(__maxHealth * 2, 25, 0xFFD31200);
-		fill.makeGraphic(__maxHealth * 2, 25, 0xFFFFFF00);
+		
+        final width = Std.int(maxHealth * 1.2);
+        empty.makeGraphic(width, 25, 0xFFD31200);
+		fill.makeGraphic(width, 25, 0xFFFFFF00);
 
         karmaBar = new FlxSprite(0, 0);
-		karmaBar.makeGraphic(__maxHealth * 2, 25, 0xFFFF00FF);
+		karmaBar.makeGraphic(width, 25, 0xFFFF00FF);
 
         remove(fill);
         add(karmaBar);

@@ -69,8 +69,6 @@ class PlayState extends BaseState
 		if (FlxG.keys.pressed.Q) hurt(1, true);
 		if (FlxG.keys.pressed.W) heal(1);
 		if (FlxG.keys.pressed.E) heal(Player.maxHealth);
-		Player.health = Std.int(FlxMath.bound(Player.health, 0, Player.maxHealth - Player.karma));
-		Player.karma = Std.int(FlxMath.bound(Player.karma, 0, Player.maxHealth - Player.health));
 
 		karmaCooldown -= elapsed;
 		if (karmaCooldown <= 0) {
@@ -83,6 +81,9 @@ class PlayState extends BaseState
 		if (isHit && iFrames <= 0) {
 			hurt(Flags.damage);
 		}
+
+		Player.health = Std.int(FlxMath.bound(Player.health, 0, Player.maxHealth - Player.karma));
+		Player.karma = Std.int(FlxMath.bound(Player.karma, 0, Player.maxHealth - Player.health));
 
 		ghostCooldown -= elapsed;
 		if (heart.heartType == BRAVERY && ghostCooldown < 0) {
@@ -117,8 +118,10 @@ class PlayState extends BaseState
 		Player.health += amount;
 
 	public inline function hurt(amount:Int, inflictKarma:Bool = false) {
+		var damaged = false;
 		if (inflictKarma) {
-			if (krIFrame <= 0) { 
+			if (krIFrame <= 0) {
+				damaged = true; 
 				krIFrame = 0.02;
 				if (Player.health == 1) {
 					if (Player.karma <= 0)
@@ -133,9 +136,12 @@ class PlayState extends BaseState
 		} else {
 			if (iFrames <= 0) {
 				iFrames = 1/3;
+				damaged = true;
 				Player.health -= amount;
 			}
 		}
+
+		if (damaged) FlxG.sound.play(Util.getSound('damage'), .8);
 	}
 
 	public function changeHeart(type:HeartType) {
