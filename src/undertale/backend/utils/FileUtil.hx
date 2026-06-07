@@ -18,7 +18,7 @@ import openfl.utils.Assets as OpenFlAssets;
 
     public static inline function readDirectory(path:String):Array<String> {
 		#if (sys || (js && hxnodejs))
-        return FileSystem.readDirectory(path);
+		return (FileSystem.isDirectory(path) ? FileSystem.readDirectory(path) : []);
         #else
         return [];
         #end

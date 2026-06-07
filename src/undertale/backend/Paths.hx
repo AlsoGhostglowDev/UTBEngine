@@ -35,9 +35,9 @@ package undertale.backend;
 
 	static inline function checkScriptsInDirectory(dir:String, ?checkForPacks:Bool = false):Array<String> {
 		var scripts:Array<String> = [];
-		for (script in FileUtil.readDirectory(dir)) {
+		for (script in FileUtil.readDirectory('$ASSETS_FOLDER/$dir')) {
 			if (isScript(script) || (checkForPacks && isScriptPack(script))) {
-				scripts.push(script);
+				scripts.push(ASSETS_FOLDER + "/" + dir + script);
 			}
 		}
 

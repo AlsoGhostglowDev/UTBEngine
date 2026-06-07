@@ -5,7 +5,10 @@ import flixel.math.FlxMath;
 import undertale.objects.*;
 import undertale.objects.Heart.HeartType;
 import undertale.game.ui.*;
+#if HSCRIPT_ALLOWED
 import undertale.backend.scripting.Scripts;
+import undertale.backend.scripting.HScript;
+#end
 
 class PlayState extends BaseState
 {
@@ -18,6 +21,10 @@ class PlayState extends BaseState
 
 	override public function create()
 	{
+		#if HSCRIPT_ALLOWED
+		initGameScripts();
+		#end
+
 		super.create();
 
 		actor = Actor.load('sans');
@@ -39,6 +46,8 @@ class PlayState extends BaseState
 		add(heart);
 
 		new FlxTimer().start(2, tmr -> box.tweenSize(500, 150, .15, {onUpdate: twn -> box.screenCenter()}));
+
+		scriptCall("createPost");
 	}
 
 	var ghostCooldown:Float = 0.025;
@@ -48,6 +57,8 @@ class PlayState extends BaseState
 	var iFrames:Float = 0;
 	override public function update(elapsed:Float)
 	{
+		scriptCall("update", [elapsed]);
+
 		super.update(elapsed);
 
 		// 16 = heart size, 5 = box border thickness
@@ -113,6 +124,20 @@ class PlayState extends BaseState
 				shootCooldown = 0.1;
 			}
 		}
+
+		scriptCall("updatePost", [elapsed]);
+	}
+
+	override public function destroy() {
+		scriptCall("destroy");
+        #if HSCRIPT_ALLOWED
+		if (scripts != null) {
+			scripts.destroy();
+			scripts = null;
+        }
+        #end
+
+		super.destroy();
 	}
 
 	public inline function heal(amount:Int)
@@ -160,5 +185,36 @@ class PlayState extends BaseState
 			remove(trans);
 			trans.destroy();
 		}});
+	}
+
+	/* Scripting functions */
+
+	#if HSCRIPT_ALLOWED
+	public var scripts:Scripts;
+
+	public function initGameScripts() {
+		scripts = new Scripts();
+		scripts.parent = this;
+
+		for (script in Paths.checkScriptsInDirectory("data/game/", false)) {
+			scripts.importScript(script);
+		}
+
+		scriptCall("create");
+	}
+	#end
+
+	public inline function scriptCall(func:String, ?args:Array<Dynamic>):Dynamic {
+		#if HSCRIPT_ALLOWED
+		return (scripts != null ? scripts.call(func, args) : null);
+		#else
+		return null;
+		#end
+	}
+
+	public inline function scriptSet(name:String, val:Dynamic) {
+		#if HSCRIPT_ALLOWED
+		if (scripts != null) scripts.set(name, val);
+		#end
 	}
 }
