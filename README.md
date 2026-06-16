@@ -6,6 +6,7 @@ a flexible Undertale Battle Engine made in HaxeFlixel.
 
 ## Contributors
 - [GhostglowDev](https://github.com/AlsoGhostglowDev)
+- [T-Bar](https://github.com/TBar09)
 
 ---
 
@@ -13,14 +14,14 @@ a flexible Undertale Battle Engine made in HaxeFlixel.
 ### General
 - [ ] Main Menu
 - [ ] Pause Menu
-- [ ] Debugging Information
+- [X] Debugging Information
 - [X] Battle Box
 - [X] Heart
-- [ ] Buttons
+- [X] Buttons
 - [ ] Actor
 - [ ] UI
 - [ ] Editor
-- [ ] HScript <br><br>
+- [X] HScript <br><br>
 ### Bullets
   - [ ] Bone (Sans / Papyrus)
   - [ ] Gaster Blaster (Sans / Gaster)

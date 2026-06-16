@@ -1,12 +1,31 @@
 package undertale.backend;
 
+import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.graphics.FlxGraphic;
+
 //TODO: `mods` folder support & changing `assets` folder
 @:publicFields class Paths
 {
 	public static inline var ASSETS_FOLDER:String = "assets";
 
+	// Image related stuff
 	static inline function image(key:String):String {
 		return '$ASSETS_FOLDER/images/$key.png';
+	}
+
+	static inline function imageXml(key:String):String {
+		return '$ASSETS_FOLDER/images/$key.xml';
+	}
+
+	static inline function getSparrowAtlas(file:String):FlxAtlasFrames {
+		var graphic:FlxGraphic = FlxGraphic.fromAssetKey(image('$file.png'));
+		return FlxAtlasFrames.fromSparrow(graphic, getPath('images/$file.xml'));
+	}
+
+	// Misc
+
+	static inline function getPath(key:String):String {
+		return '$ASSETS_FOLDER/$key';
 	}
 
 	static inline function font(key:String):String {
